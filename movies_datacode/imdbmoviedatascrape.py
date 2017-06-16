@@ -11,16 +11,16 @@ os.chdir('/Applications/MAMP/htdocs/project_2/movie_spreadsheets')
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-with open('/Applications/MAMP/htdocs/project_2/movie_spreadsheets/action_dataset.csv', 'a') as csvfile:
+with open('/Applications/MAMP/htdocs/project_2/movie_spreadsheets/scifi_dataset.csv', 'a') as csvfile:
 
     writer = csv.writer(csvfile, delimiter='\t',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
 
-    c = np.genfromtxt('action.csv', delimiter="\t", dtype=str, skiprows=0)
+    c = np.genfromtxt('scifi.csv', delimiter="\t", dtype=str, skiprows=0)
     movies = c[:]
 
-    for i in range(116,len(movies)):
+    for i in range(0,len(movies)):
         movie_id = movies[i:i+1,0:1]
         imdb_id = movies[i:i+1,1:2]
         gross = movies[i:i+1,2:3]
@@ -30,8 +30,6 @@ with open('/Applications/MAMP/htdocs/project_2/movie_spreadsheets/action_dataset
         gross = gross[0][0]
 
         print movie_id
-        if movie_id == "The Day After Tomorrow":
-            print imdb_id
 
         url = "http://www.imdb.com/title/tt"+imdb_id+"/business"
 

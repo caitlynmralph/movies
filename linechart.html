@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+
+.line {
+  fill: none;
+  stroke: blue;
+  stroke-width: 2px;
+}
+
+</style>
+<body>
+
+<!-- load the d3.js library -->
+<script type="text/javascript" src="d3/d3.js"></script>
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 35, right: 70, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// set the ranges
+var x = d3.scaleBand()
+    .rangeRound([0, width])
+    .paddingInner(0.1);
+var y = d3.scaleLinear().range([height, 0]);
+
+var valueline = d3.line()
+    .x(function(d) { return x(d.decades); })
+    .y(function(d) { return y(d.action); });
+
+var valueline2 = d3.line()
+    .x(function(d) { return x(d.decades); })
+    .y(function(d) { return y(d.adventure); });
+
+var valueline3 = d3.line()
+    .x(function(d) { return x(d.decades); })
+    .y(function(d) { return y(d.comedy); });
+
+var valueline4 = d3.line()
+    .x(function(d) { return x(d.decades); })
+    .y(function(d) { return y(d.drama); });
+
+var valueline5 = d3.line()
+    .x(function(d) { return x(d.decades); })
+    .y(function(d) { return y(d.horror); });
+
+var valueline6 = d3.line()
+    .x(function(d) { return x(d.decades); })
+    .y(function(d) { return y(d.scifi); });
+
+// var valueline7 = d3.line()
+//     .x(function(d) { return x(d.year); })
+//     .y(function(d) { return y(d.animation); });
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+d3.csv("data.csv", function(d, i, columns) {
+  for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
+  return d;
+}, function(error, data) {
+  if (error) throw error;
+
+  var keys = data.columns.slice(1);
+  x.domain(data.map(function(d) { return d.decades; }));
+
+  // Scale the range of the data
+  //x.domain(d3.extent(data, function(d) { return d.year; }));
+  y.domain([0, d3.max(data, function(d) {
+	  return Math.max(d.action, d.adventure, d.comedy, d.drama, d.horror, d.scifi); })]);
+
+  // Add the valueline path.
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("d", valueline);
+
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .style("stroke", "red")
+      .attr("d", valueline2);
+
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .style("stroke", "yellow")
+      .attr("d", valueline3);
+
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .style("stroke", "green")
+      .attr("d", valueline4);
+
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .style("stroke", "purple")
+      .attr("d", valueline5);
+
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .style("stroke", "black")
+      .attr("d", valueline6);
+
+  // svg.append("path")
+  //     .data([data])
+  //     .attr("class", "line")
+  //     .style("stroke", "gray")
+  //     .attr("d", valueline7);
+
+  svg.append("text")
+  		.attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].action) + ")")
+  		.attr("dy", ".35em")
+  		.attr("text-anchor", "start")
+  		.style("fill", "blue")
+      .style("font-family", "sans-serif")
+      .style("text-decoration", "bold")
+      .style("font-size", "12px")
+  		.text("Action");
+
+  svg.append("text")
+  		.attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].adventure) + ")")
+  		.attr("dy", ".35em")
+  		.attr("text-anchor", "start")
+  		.style("fill", "red")
+      .style("font-family", "sans-serif")
+      .style("text-decoration", "bold")
+      .style("font-size", "12px")
+  		.text("Adventure");
+
+  // svg.append("text")
+  //   	.attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].animation) + ")")
+  //   	.attr("dy", ".35em")
+  //   	.attr("text-anchor", "start")
+  //   	.style("fill", "yellow")
+  //     .style("font-family", "sans-serif")
+  //     .style("text-decoration", "bold")
+  //     .style("font-size", "12px")
+  //     .text("Animation");
+
+  svg.append("text")
+      .attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].comedy) + ")")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "start")
+      .style("fill", "yellow")
+      .style("font-family", "sans-serif")
+      .style("text-decoration", "bold")
+      .style("font-size", "12px")
+      .text("Comedy");
+
+  svg.append("text")
+      .attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].drama) + ")")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "start")
+      .style("fill", "green")
+      .style("font-family", "sans-serif")
+      .style("text-decoration", "bold")
+      .style("font-size", "12px")
+      .text("Drama");
+
+  svg.append("text")
+      .attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].horror) + ")")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "start")
+      .style("fill", "purple")
+      .style("font-family", "sans-serif")
+      .style("text-decoration", "bold")
+      .style("font-size", "12px")
+      .text("Horror");
+
+  svg.append("text")
+      .attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].scifi) + ")")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "start")
+      .style("fill", "black")
+      .style("font-family", "sans-serif")
+      .style("text-decoration", "bold")
+      .style("font-size", "12px")
+      .text("Sci-Fi");
+
+  // Add the X Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // Add the Y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y).ticks(5,"%"))
+      .append("text")
+        .attr("x", 2)
+        .attr("y", y(y.ticks().pop()) + 0.5)
+        .attr("dy", "0.32em")
+        .attr("fill", "#000")
+        .attr("font-weight", "bold")
+        .attr("text-anchor", "start")
+        .style("font-size", "12px")
+        .text("ROI");
+
+    svg.append("text")
+      .attr("x", (width / 2))
+      .attr("y", 0 - (margin.top / 2))
+      .attr("text-anchor", "middle")
+      .style("font-size", "20px")
+      .style("font-family", "sans-serif")
+      .style("text-decoration", "bold")
+      .text("ROI by decade per genre");
+
+});
+
+</script>
+</body>

@@ -11,12 +11,12 @@ os.chdir('/Applications/MAMP/htdocs/project_2/movie_spreadsheets')
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-with open('/Applications/MAMP/htdocs/project_2/movie_spreadsheets/adventure.csv', 'a') as csvfile:
+with open('/Applications/MAMP/htdocs/project_2/movie_spreadsheets/scifi.csv', 'a') as csvfile:
 
     writer = csv.writer(csvfile, delimiter='\t',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
-    url = "http://www.imdb.com/search/title?genres=adventure&sort=boxoffice_gross_us,desc"
+    url = "http://www.imdb.com/search/title?genres=sci_fi&sort=boxoffice_gross_us,desc"
 
     html = urlopen(url).read()
     soup = BeautifulSoup(html, "lxml")
@@ -41,7 +41,7 @@ with open('/Applications/MAMP/htdocs/project_2/movie_spreadsheets/adventure.csv'
         writer.writerow([movie_id,imdb_id,box_office])
 
     for i in range(2, 11):
-        url = "http://www.imdb.com/search/title?genres=adventure&sort=boxoffice_gross_us,desc&page="+str(i)+"&ref_=adv_nxt"
+        url = "http://www.imdb.com/search/title?genres=sci_fi&sort=boxoffice_gross_us,desc&page="+str(i)+"&ref_=adv_nxt"
 
         html = urlopen(url).read()
         soup = BeautifulSoup(html, "lxml")
