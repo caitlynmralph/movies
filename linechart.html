@@ -23,8 +23,10 @@ var margin = {top: 35, right: 70, bottom: 30, left: 50},
 // set the ranges
 var x = d3.scaleBand()
     .rangeRound([0, width])
-    .paddingInner(0.1);
 var y = d3.scaleLinear().range([height, 0]);
+
+var z = d3.scaleOrdinal()
+    .range(["black", "purple","green","yellow","red","blue"]);
 
 var valueline = d3.line()
     .x(function(d) { return x(d.decades); })
@@ -121,25 +123,25 @@ d3.csv("data.csv", function(d, i, columns) {
   //     .style("stroke", "gray")
   //     .attr("d", valueline7);
 
-  svg.append("text")
-  		.attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].action) + ")")
-  		.attr("dy", ".35em")
-  		.attr("text-anchor", "start")
-  		.style("fill", "blue")
-      .style("font-family", "sans-serif")
-      .style("text-decoration", "bold")
-      .style("font-size", "12px")
-  		.text("Action");
-
-  svg.append("text")
-  		.attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].adventure) + ")")
-  		.attr("dy", ".35em")
-  		.attr("text-anchor", "start")
-  		.style("fill", "red")
-      .style("font-family", "sans-serif")
-      .style("text-decoration", "bold")
-      .style("font-size", "12px")
-  		.text("Adventure");
+  // svg.append("text")
+  // 		.attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].action) + ")")
+  // 		.attr("dy", ".35em")
+  // 		.attr("text-anchor", "start")
+  // 		.style("fill", "blue")
+  //     .style("font-family", "sans-serif")
+  //     .style("text-decoration", "bold")
+  //     .style("font-size", "12px")
+  // 		.text("Action");
+  //
+  // svg.append("text")
+  // 		.attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].adventure) + ")")
+  // 		.attr("dy", ".35em")
+  // 		.attr("text-anchor", "start")
+  // 		.style("fill", "red")
+  //     .style("font-family", "sans-serif")
+  //     .style("text-decoration", "bold")
+  //     .style("font-size", "12px")
+  // 		.text("Adventure");
 
   // svg.append("text")
   //   	.attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].animation) + ")")
@@ -151,50 +153,31 @@ d3.csv("data.csv", function(d, i, columns) {
   //     .style("font-size", "12px")
   //     .text("Animation");
 
-  svg.append("text")
-      .attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].comedy) + ")")
-      .attr("dy", ".35em")
-      .attr("text-anchor", "start")
-      .style("fill", "yellow")
-      .style("font-family", "sans-serif")
-      .style("text-decoration", "bold")
-      .style("font-size", "12px")
-      .text("Comedy");
+var legend = svg.append("g")
+  .attr("font-family", "sans-serif")
+  .attr("font-size", 10)
+  .attr("text-anchor", "end")
+  .selectAll("g")
+  .data(keys.slice().reverse())
+  .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-  svg.append("text")
-      .attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].drama) + ")")
-      .attr("dy", ".35em")
-      .attr("text-anchor", "start")
-      .style("fill", "green")
-      .style("font-family", "sans-serif")
-      .style("text-decoration", "bold")
-      .style("font-size", "12px")
-      .text("Drama");
+legend.append("rect")
+    .attr("x", width - 19)
+    .attr("width", 19)
+    .attr("height", 19)
+    .attr("fill", z);
 
-  svg.append("text")
-      .attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].horror) + ")")
-      .attr("dy", ".35em")
-      .attr("text-anchor", "start")
-      .style("fill", "purple")
-      .style("font-family", "sans-serif")
-      .style("text-decoration", "bold")
-      .style("font-size", "12px")
-      .text("Horror");
-
-  svg.append("text")
-      .attr("transform", "translate(" + (width+1) + "," + y(data[data.length -1].scifi) + ")")
-      .attr("dy", ".35em")
-      .attr("text-anchor", "start")
-      .style("fill", "black")
-      .style("font-family", "sans-serif")
-      .style("text-decoration", "bold")
-      .style("font-size", "12px")
-      .text("Sci-Fi");
+legend.append("text")
+    .attr("x", width - 24)
+    .attr("y", 9.5)
+    .attr("dy", "0.32em")
+    .text(function(d) { return d; });
 
   // Add the X Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x).ticks(4));
 
   // Add the Y Axis
   svg.append("g")
